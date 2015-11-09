@@ -1,0 +1,99 @@
+<html>
+	<head>
+		<title>
+			Registeration
+		</title>
+		<meta charset="utf-8">
+  		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="lib/bootstrap.min.css">
+		<link rel="stylesheet" href="lib/style.css">
+		<script src="lib/jquery-2.1.4.js"></script>
+		<script src="lib/jquery.min.js"></script>
+  		<script src="lib/bootstrap.min.js"></script>
+		<script>
+		$(document).ready(function () {
+			$("#registerForm").submit(function( event ) {
+
+				 // Stop form from submitting normally
+	  			event.preventDefault();
+
+	  			var $form = $( this ),
+			    url = $form.attr( "action" );
+
+				var username = document.getElementById("name").value;
+				var password = document.getElementById("password").value;
+				var repassword = document.getElementById("repassword").value;
+				var email = document.getElementById("email").value;
+
+				if(username && password && repassword && email){
+					if(password===repassword){
+
+						if(password.length<=5){
+							var theDiv2 = document.getElementById("repass");
+							var content2 = document.createTextNode("Password must be of 6 or more length");
+							theDiv2.appendChild(content2);
+						}
+						else{
+						// Send the data using post
+			  			var posting = $.post( url, { username: username,password: password,repassword: repassword,email:email } );
+
+			  			posting.done(function( data ) {
+			  				if(data.result=="Sucess"){
+						    $("#registerForm").addClass("hidden");
+						    var theDiv1 = document.getElementById("contid");
+							var content1 = document.createTextNode("You are registered successfully");
+							theDiv1.appendChild(content1);
+							}
+							else if(data.result=="Username/Email already existed"){
+								$('#usrnm').html(data.result);
+							}
+					  	 });
+			  			}
+		  		   	 }
+			  		else{
+						$('#usrnm').html("Password and Repeat Password not same. Please type same password!");
+			  		 }
+		  		}
+		  	});
+		});
+		</script>
+	</head>
+	<body>
+		<div class="container" id="contid">
+			<h2>Sign-Up form</h2>
+			<form action="http://localhost:3000/register" id="registerForm" class="form-horizontal" role="form">
+				<div class="form-group">
+		            <label class="control-label col-sm-2" for="name">Userame:</label>
+		            <div class="col-sm-10">
+		            	<input type="text" class="form-control" id="name" placeholder="Enter your user name" required/>
+		            </div>
+		            <div id="usrnm"></div>
+	    		</div>
+	    		<div class="form-group">
+		            <label class="control-label col-sm-2" for="password">Password:</label>
+		            <div class="col-sm-10">
+		            	<input type="password" id="password" class="form-control" placeholder="Enter your password" required/>
+		        	</div>
+		        </div>
+		        <div class="form-group">
+	            	<label class="control-label col-sm-2" for="repassword">Re-enter Password:</label>
+	            	<div class="col-sm-10">
+	            		<input type="password" id="repassword" class="form-control" placeholder="Enter your password again" required/>
+	            	</div>
+		        </div>
+		        <div id="repass"></div>
+		        <div class="form-group">
+	            <label class="control-label col-sm-2" for="email">Email:</label>
+	            <div class="col-sm-10">
+	            	<input type="email" id="email" class="form-control" placeholder="Enter your email address" required/>
+	            	</div>
+		        </div>
+	            <div class="form-group"> 
+		            <div class="col-sm-offset-2 col-sm-10">
+		            	<input type="submit" value="Submit" class="btn btn-default"/>
+		            </div>
+	            </div>
+	    	</form>
+	    </div>
+	</body>
+</html>
